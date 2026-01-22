@@ -11,9 +11,8 @@
 
     <style>
         :root {
-            --bg-dark: #1a1a2e;
+            --bg-dark: #000000;
             --purple: #4a148c;
-            --neon-purple: #7b1fa2;
             --yellow: #ffeb3b;
             --red: #f44336;
             --green: #00e676;
@@ -21,8 +20,7 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text);
@@ -39,32 +37,30 @@
 
         /* --- 1. شاشة الهبوط (الصورة) --- */
         #scr-landing {
+            /* التعديل: عرض الصورة بالكامل بدون قص */
             background-image: url('48521.jpg');
-            background-size: cover;
+            background-size: contain; 
+            background-repeat: no-repeat;
             background-position: center;
-            justify-content: flex-end;
-            padding-bottom: 50px;
+            justify-content: flex-end; 
+            padding-bottom: 30px;
         }
         
-        /* طبقة تعتيم خفيفة للكتابة */
-        #scr-landing::before {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            z-index: 0;
-        }
-
-        .landing-content { z-index: 1; text-align: center; width: 100%; }
+        /* التعديل: إزالة طبقة التعتيم لجعل الصورة واضحة تماماً */
+        
+        .landing-content { z-index: 1; text-align: center; width: 100%; margin-bottom: 20px; }
 
         .btn-main {
             background: var(--yellow);
             color: #000;
             border: none;
-            padding: 20px 60px;
-            font-size: 2rem;
+            /* التعديل: تصغير الزر */
+            padding: 10px 40px;
+            font-size: 1.2rem;
             font-weight: 900;
-            border-radius: 50px;
+            border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
+            box-shadow: 0 0 15px rgba(255, 235, 59, 0.3);
             transition: transform 0.2s;
         }
         .btn-main:hover { transform: scale(1.05); }
@@ -75,7 +71,6 @@
             position: relative;
         }
 
-        /* الباركود الكبير (للمتسابقين) */
         .qr-big-container {
             text-align: center;
             background: white;
@@ -86,31 +81,39 @@
         .qr-big-container h2 { color: var(--purple); margin: 0 0 10px 0; font-size: 2.5rem; }
         .qr-big { width: 350px; height: 350px; }
 
-        /* الباركود الصغير (للمقدم) */
         .qr-tiny-container {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 5px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid var(--yellow);
+            position: absolute; bottom: 20px; left: 20px;
+            background: white; padding: 5px; border-radius: 10px;
+            text-align: center; border: 2px solid var(--yellow);
         }
         .qr-tiny { width: 80px; height: 80px; }
         .qr-tiny-label { font-size: 0.8rem; color: #000; font-weight: bold; }
 
-        /* زر البدء في شاشة الباركود */
         .btn-start-game {
-            margin-top: 40px;
-            background: var(--green);
-            color: white;
-            padding: 15px 50px;
-            font-size: 1.8rem;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
+            margin-top: 40px; background: var(--green); color: white;
+            padding: 15px 50px; font-size: 1.8rem; border: none;
+            border-radius: 15px; cursor: pointer; font-weight: bold;
+        }
+
+        /* --- شاشة تسجيل دخول اللاعب (الجديدة) --- */
+        #scr-player-login {
+            background: linear-gradient(135deg, #4a148c 0%, #000 100%);
+        }
+        .login-box {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid var(--yellow);
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .login-input {
+            width: 90%; padding: 15px; margin: 15px 0;
+            border-radius: 10px; border: none;
+            font-size: 1.2rem; text-align: center;
+            font-family: 'Tajawal';
         }
 
         /* --- 3. شاشة التلفزيون (Main) --- */
@@ -123,45 +126,27 @@
         .answers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 90%;
-            margin-top: 30px;
+            gap: 20px; width: 90%; margin-top: 30px;
         }
 
         .player-card {
             background: rgba(255,255,255,0.1);
             border: 2px solid var(--purple);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: 0.3s;
+            border-radius: 15px; padding: 20px;
+            text-align: center; transition: 0.3s;
         }
         .player-name { font-size: 1.8rem; font-weight: bold; color: var(--yellow); margin-bottom: 10px; }
         .player-ans { 
-            font-size: 1.5rem; 
-            color: white; 
-            background: rgba(0,0,0,0.5); 
-            padding: 10px; 
-            border-radius: 10px; 
-            min-height: 40px;
-            display: none; /* مخفي في البداية */
+            font-size: 1.5rem; color: white; background: rgba(0,0,0,0.5); 
+            padding: 10px; border-radius: 10px; min-height: 40px; display: none;
         }
         .player-card.done { border-color: var(--green); box-shadow: 0 0 10px var(--green); }
 
         .reveal-box {
-            margin-top: 50px;
-            width: 80%;
-            display: flex;
-            justify-content: space-around;
-            display: none; /* مخفي */
+            margin-top: 50px; width: 80%; display: flex; justify-content: space-around; display: none;
         }
         .q-box {
-            background: #fff;
-            color: #000;
-            padding: 20px;
-            border-radius: 20px;
-            width: 40%;
-            text-align: center;
+            background: #fff; color: #000; padding: 20px; border-radius: 20px; width: 40%; text-align: center;
             box-shadow: 0 0 30px rgba(255,255,255,0.3);
         }
         .q-title { font-size: 1.2rem; color: #666; font-weight: bold; }
@@ -171,14 +156,12 @@
         /* --- 4. شاشات الجوال --- */
         .mobile-view { padding: 20px; text-align: center; justify-content: flex-start; overflow-y: auto; background: #f3e5f5; color: #333; }
         
-        /* شاشة اللاعب */
         #p-q-box { 
             background: var(--purple); color: white; padding: 30px; border-radius: 20px; margin: 20px 0; font-size: 1.5rem; font-weight: bold;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .input-box { width: 80%; padding: 15px; font-size: 1.2rem; border-radius: 10px; border: 2px solid #ccc; text-align: center; margin-bottom: 10px; }
 
-        /* شاشة المقدم */
         .admin-secret-box {
             background: #000; color: var(--yellow);
             padding: 15px; border-radius: 10px; border: 2px solid var(--red);
@@ -208,21 +191,26 @@
             <h2>امسح للانضمام</h2>
             <div id="qr-players"></div>
         </div>
-
         <button class="btn-start-game" onclick="startGameDisplay()">اضغط للعب 🎮</button>
-
         <div class="qr-tiny-container">
             <div id="qr-admin" class="qr-tiny"></div>
             <div class="qr-tiny-label">المقدم</div>
         </div>
     </div>
 
+    <div id="scr-player-login" class="screen">
+        <div class="login-box">
+            <h2 style="color:white; margin-top:0;">مرحباً بك! 👋</h2>
+            <p style="color:#ddd;">سجل اسمك للدخول إلى اللعبة</p>
+            <input type="text" id="p-name-input" class="login-input" placeholder="اكتب اسمك هنا...">
+            <button class="btn-main" style="width:100%;" onclick="confirmPlayerName()">دخول 🚀</button>
+        </div>
+    </div>
+
     <div id="scr-tv" class="screen">
         <h1 style="color:white; font-size: 3rem;">مين المختلف؟ 🤔</h1>
         <div id="tv-status" style="color:var(--yellow); font-size:1.5rem;">في انتظار المقدم...</div>
-        
         <div id="tv-players-grid" class="answers-grid"></div>
-
         <div id="tv-reveal-area" class="reveal-box">
             <div class="q-box" id="tv-normal-q-box" style="display:none;">
                 <div class="q-title">سؤال الجماعة</div>
@@ -237,22 +225,20 @@
 
     <div id="scr-player" class="screen mobile-view">
         <div id="p-waiting">
-            <h2>أهلاً <span id="p-name-disp"></span></h2>
+            <h2>أهلاً <span id="p-name-disp" style="color:var(--purple)"></span></h2>
             <p>انتظر بدء الجولة...</p>
         </div>
-        
         <div id="p-game" style="display:none;">
             <h3>سؤالك هو:</h3>
             <div id="p-q-box">جاري التحميل...</div>
             <input type="text" id="p-answer-input" class="input-box" placeholder="اكتب إجابتك هنا">
             <button class="btn-main" style="width:100%; font-size:1.2rem;" onclick="submitAnswer()">إرسال الإجابة</button>
-            <p id="p-status" style="color:green; display:none;">تم الإرسال! انتظر البقية.</p>
+            <p id="p-status" style="color:green; display:none; margin-top:10px;">تم الإرسال! انتظر البقية.</p>
         </div>
     </div>
 
     <div id="scr-admin" class="screen mobile-view">
         <h2>لوحة التحكم 🛠</h2>
-        
         <div class="admin-secret-box">
             <h3>🤫 المعلومات السرية</h3>
             <p>المختلف هو: <span id="adm-odd-name" style="font-size:1.5rem; color:red;">...</span></p>
@@ -260,7 +246,6 @@
             <p style="font-size:0.9rem;">سؤال الجماعة: <span id="adm-norm-q" style="color:white"></span></p>
             <p style="font-size:0.9rem;">سؤال المختلف: <span id="adm-odd-q" style="color:white"></span></p>
         </div>
-
         <div id="adm-controls">
             <h3>التحكم بالشاشة:</h3>
             <button class="ctrl-btn btn-green" onclick="startNewRound()">🎲 توزيع أسئلة جديدة</button>
@@ -275,7 +260,6 @@
     </div>
 
     <script>
-        // --- إعدادات Firebase ---
         const firebaseConfig = {
             apiKey: "AIzaSyDh4v9gRCICA_XRCJXsDpbtCySYAoFsfhk",
             authDomain: "bagera-word.firebaseapp.com",
@@ -288,8 +272,6 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // --- بنك الأسئلة (مثال) ---
-        // كل عنصر يحتوي على: norm (سؤال الجماعة)، odd (سؤال المختلف)
         const questionsPool = [
             { norm: "شيء تلبسه في رجلك؟", odd: "شيء تلبسه في يدك؟" },
             { norm: "فاكهة لونها أصفر؟", odd: "فاكهة لونها أحمر؟" },
@@ -299,24 +281,21 @@
             { norm: "نادي سعودي شعاره أصفر؟", odd: "نادي سعودي شعاره أزرق؟" }
         ];
 
-        // --- المتغيرات ---
         const urlParams = new URLSearchParams(window.location.search);
         let roomId = urlParams.get('room');
-        let role = urlParams.get('role'); // admin or player
+        let role = urlParams.get('role'); 
         let myName = "";
         let myId = "";
 
-        // --- عند التحميل ---
         window.onload = function() {
             if (!roomId && !role) {
-                // نحن في الصفحة الرئيسية
+                // Main landing
             } else if (roomId && role === 'admin') {
                 initAdmin();
             } else if (roomId && role === 'player') {
-                initPlayerLogin();
+                // بدل ما يطلب الاسم فوراً، نظهر شاشة الدخول
+                showPlayerLogin();
             } else if (roomId && !role) {
-                // شاشة الباركود أو التلفزيون
-                // سنفترض أنها شاشة الباركود أولاً
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById('scr-connect').classList.add('active');
                 generateQRs();
@@ -324,20 +303,10 @@
         };
 
         function goToConnect() {
-            // إنشاء غرفة جديدة
             roomId = Math.random().toString(36).substr(2, 6);
             const newUrl = window.location.href.split('?')[0] + `?room=${roomId}`;
             window.history.pushState({path:newUrl}, '', newUrl);
-            
-            // تهيئة قاعدة البيانات
-            db.ref(`oddgame/${roomId}`).set({
-                state: 'lobby',
-                round: 0,
-                showAns: false,
-                showNormQ: false,
-                showOddQ: false
-            });
-
+            db.ref(`oddgame/${roomId}`).set({ state: 'lobby', round: 0, showAns: false, showNormQ: false, showOddQ: false });
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('scr-connect').classList.add('active');
             generateQRs();
@@ -345,74 +314,51 @@
 
         function generateQRs() {
             const baseUrl = window.location.href.split('?')[0];
-            
-            // باركود اللاعبين (كبير)
             const playerUrl = `${baseUrl}?room=${roomId}&role=player`;
             document.getElementById('qr-players').innerHTML = `<img class="qr-big" src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(playerUrl)}" />`;
-
-            // باركود المقدم (صغير)
             const adminUrl = `${baseUrl}?room=${roomId}&role=admin`;
             document.getElementById('qr-admin').innerHTML = `<img class="qr-tiny" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(adminUrl)}" />`;
         }
 
         function startGameDisplay() {
-            // الانتقال لشاشة التلفزيون
             document.getElementById('scr-connect').classList.remove('active');
             document.getElementById('scr-tv').classList.add('active');
             initTV();
         }
 
-        // --- منطق التلفزيون (Main Screen) ---
         function initTV() {
             db.ref(`oddgame/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if (!data) return;
-
                 const grid = document.getElementById('tv-players-grid');
                 grid.innerHTML = '';
-
-                // عرض حالة اللعبة
                 const statusDiv = document.getElementById('tv-status');
                 if (data.state === 'lobby') statusDiv.innerText = "انتظار اللاعبين...";
                 else if (data.state === 'answering') statusDiv.innerText = "اللاعبون يكتبون الإجابات...";
                 else if (data.state === 'revealing') statusDiv.innerText = "الإجابات:";
 
-                // عرض اللاعبين
                 if (data.players) {
                     Object.keys(data.players).forEach(pid => {
                         const p = data.players[pid];
                         const card = document.createElement('div');
                         card.className = 'player-card';
-                        if (p.answer) card.classList.add('done'); // تمييز من أجاب
-
+                        if (p.answer) card.classList.add('done'); 
                         let ansHtml = '';
-                        // إظهار الإجابة فقط إذا سمح المقدم
-                        if (data.showAns && p.answer) {
-                            ansHtml = `<div class="player-ans" style="display:block">${p.answer}</div>`;
-                        } else if (p.answer) {
-                            ansHtml = `<div class="player-ans" style="display:block; background:#fff; color:#fff;">???</div>`; // مغطى
-                        } else {
-                            ansHtml = `<div class="player-ans">...</div>`;
-                        }
-
-                        card.innerHTML = `
-                            <div class="player-name">${p.name}</div>
-                            ${ansHtml}
-                        `;
+                        if (data.showAns && p.answer) ansHtml = `<div class="player-ans" style="display:block">${p.answer}</div>`;
+                        else if (p.answer) ansHtml = `<div class="player-ans" style="display:block; background:#fff; color:#fff;">???</div>`;
+                        else ansHtml = `<div class="player-ans">...</div>`;
+                        card.innerHTML = `<div class="player-name">${p.name}</div>${ansHtml}`;
                         grid.appendChild(card);
                     });
                 }
 
-                // عرض الأسئلة في النهاية
                 const revealArea = document.getElementById('tv-reveal-area');
                 const normBox = document.getElementById('tv-normal-q-box');
                 const oddBox = document.getElementById('tv-odd-q-box');
-                
                 if (data.showNormQ || data.showOddQ) {
                     revealArea.style.display = 'flex';
                     normBox.style.display = data.showNormQ ? 'block' : 'none';
                     oddBox.style.display = data.showOddQ ? 'block' : 'none';
-                    
                     if (data.currentQ) {
                         document.getElementById('tv-normal-q').innerText = data.currentQ.norm;
                         document.getElementById('tv-odd-q').innerText = data.currentQ.odd;
@@ -423,49 +369,50 @@
             });
         }
 
-        // --- منطق اللاعب ---
-        function initPlayerLogin() {
-            const name = prompt("ادخل اسمك:");
-            if (!name) return;
-            myName = name;
+        // --- منطق دخول اللاعب الجديد ---
+        function showPlayerLogin() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scr-player-login').classList.add('active');
+        }
+
+        function confirmPlayerName() {
+            const nameVal = document.getElementById('p-name-input').value.trim();
+            if(!nameVal) return alert("الرجاء كتابة الاسم");
+            
+            myName = nameVal;
             myId = Date.now().toString();
 
-            // تسجيل اللاعب في قاعدة البيانات
             db.ref(`oddgame/${roomId}/players/${myId}`).set({
                 name: myName,
                 role: 'pending',
                 answer: ''
             });
 
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scr-player-login').classList.remove('active');
             document.getElementById('scr-player').classList.add('active');
             document.getElementById('p-name-disp').innerText = myName;
+            startPlayerListener();
+        }
 
-            // مراقبة حالة اللعبة
+        function startPlayerListener() {
             db.ref(`oddgame/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
-
                 const myData = data.players && data.players[myId];
-                
                 if (data.state === 'answering' && myData && myData.role !== 'pending') {
                     document.getElementById('p-waiting').style.display = 'none';
                     document.getElementById('p-game').style.display = 'block';
-                    
-                    // عرض السؤال المناسب
                     const qBox = document.getElementById('p-q-box');
                     if (myData.role === 'odd') {
                         qBox.innerText = data.currentQ.odd;
-                        qBox.style.background = '#d32f2f'; // أحمر للمختلف عشان ينتبه
+                        qBox.style.background = '#d32f2f';
                     } else {
                         qBox.innerText = data.currentQ.norm;
                         qBox.style.background = '#4a148c';
                     }
-
                 } else {
                     document.getElementById('p-waiting').style.display = 'block';
                     document.getElementById('p-game').style.display = 'none';
-                    // تصفير الخانات
                     document.getElementById('p-answer-input').value = '';
                     document.getElementById('p-status').style.display = 'none';
                 }
@@ -479,22 +426,16 @@
             document.getElementById('p-status').style.display = 'block';
         }
 
-        // --- منطق المقدم (Admin) ---
         function initAdmin() {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('scr-admin').classList.add('active');
-
             db.ref(`oddgame/${roomId}`).on('value', snap => {
                 const data = snap.val();
                 if(!data) return;
-
-                // تحديث المعلومات السرية للمقدم
                 if (data.currentQ) {
                     document.getElementById('adm-norm-q').innerText = data.currentQ.norm;
                     document.getElementById('adm-odd-q').innerText = data.currentQ.odd;
                 }
-                
-                // البحث عن المختلف
                 let oddName = "لم يتم التحديد";
                 if (data.players) {
                     Object.values(data.players).forEach(p => {
@@ -509,62 +450,34 @@
             db.ref(`oddgame/${roomId}`).once('value', snap => {
                 const data = snap.val();
                 if (!data || !data.players) return alert("لا يوجد لاعبين!");
-
                 const playerIds = Object.keys(data.players);
-                if (playerIds.length < 3) alert("تحتاج 3 لاعبين على الأقل ليكون الأمر ممتعاً!"); // تنبيه بس يكمل عادي
-
-                // 1. اختيار المختلف عشوائياً
+                if (playerIds.length < 3) alert("تحتاج 3 لاعبين على الأقل ليكون الأمر ممتعاً!");
                 const randIndex = Math.floor(Math.random() * playerIds.length);
                 const oddId = playerIds[randIndex];
-
-                // 2. اختيار سؤال عشوائي
                 const qRand = questionsPool[Math.floor(Math.random() * questionsPool.length)];
-
-                // 3. التحديث في قاعدة البيانات
                 let updates = {};
                 updates[`oddgame/${roomId}/state`] = 'answering';
                 updates[`oddgame/${roomId}/currentQ`] = qRand;
                 updates[`oddgame/${roomId}/showAns`] = false;
                 updates[`oddgame/${roomId}/showNormQ`] = false;
                 updates[`oddgame/${roomId}/showOddQ`] = false;
-
-                // تصفير إجابات اللاعبين وتوزيع الأدوار
                 playerIds.forEach(pid => {
                     const role = (pid === oddId) ? 'odd' : 'normal';
                     updates[`oddgame/${roomId}/players/${pid}/role`] = role;
-                    updates[`oddgame/${roomId}/players/${pid}/answer`] = ''; // مسح الإجابة القديمة
+                    updates[`oddgame/${roomId}/players/${pid}/answer`] = '';
                 });
-
                 db.ref().update(updates);
             });
         }
 
-        function revealAnswersOnTV() {
-            db.ref(`oddgame/${roomId}`).update({ 
-                state: 'revealing',
-                showAns: true 
-            });
-        }
-
-        function revealNormalQ() {
-            db.ref(`oddgame/${roomId}/showNormQ`).set(true);
-        }
-
-        function revealOddQ() {
-            db.ref(`oddgame/${roomId}/showOddQ`).set(true);
-        }
-
+        function revealAnswersOnTV() { db.ref(`oddgame/${roomId}`).update({ state: 'revealing', showAns: true }); }
+        function revealNormalQ() { db.ref(`oddgame/${roomId}/showNormQ`).set(true); }
+        function revealOddQ() { db.ref(`oddgame/${roomId}/showOddQ`).set(true); }
         function resetGame() {
             if(confirm("تصفير اللعبة بالكامل؟")) {
-                db.ref(`oddgame/${roomId}`).update({
-                    state: 'lobby',
-                    showAns: false,
-                    showNormQ: false,
-                    showOddQ: false
-                });
+                db.ref(`oddgame/${roomId}`).update({ state: 'lobby', showAns: false, showNormQ: false, showOddQ: false });
             }
         }
-
     </script>
 </body>
 </html>

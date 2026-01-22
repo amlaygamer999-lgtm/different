@@ -210,10 +210,10 @@
             </div>
         </div>
 
-        <div id="tv-odd-reveal-overlay" onclick="closeRevealOverlay()">
+        <div id="tv-odd-reveal-overlay">
             <div class="reveal-title">المختلف هو...</div>
             <div id="tv-odd-name-big" class="reveal-name"></div>
-            <p style="color:white; margin-top:20px;">اضغط للإغلاق</p>
+            <p style="color:white; margin-top:20px;">انتظر المقدم...</p>
         </div>
 
         <h2 style="color:white; margin:0 0 5px 0;">مين المختلف؟ 🤔</h2>
@@ -282,6 +282,8 @@
                 </div>
 
                 <button class="btn-ctrl" style="background:#d32f2f;" onclick="revealOddPlayer()">🤡 كشف المختلف (تلقائي)</button>
+                
+                <button class="btn-ctrl" style="background:#555;" onclick="hideOddReveal()">❌ إخفاء النتيجة (العودة)</button>
 
                 <hr>
                 <div style="display:flex; gap:5px;">
@@ -305,7 +307,7 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // بنك الأسئلة الجديد
+        // بنك الأسئلة المعتمد
         const questionsPool = [
             { norm: "ايش اكثر شي يقروش في كل خميس", odd: "ايش اكثر شيء يقروش هدى" },
             { norm: "اكثر اكله ناكلها في العشاء يوم الخميس", odd: "اكثر اكله تحب تاكلها في العشاء يوم الخميس" },
@@ -386,6 +388,7 @@
                 else if(data.state === 'reveal') st.innerText = "الإجابات:";
                 else if(data.state === 'voting') st.innerText = "التصويت جارٍ... 🕵️‍♂️";
                 else if(data.state === 'odd_reveal') st.innerText = "النتائج 🏆";
+                else if(data.state === 'results') st.innerText = "النتائج النهائية";
 
                 let oddName = "";
 
@@ -411,7 +414,6 @@
                     });
                 }
 
-                // كشف الأسئلة
                 const revBox = document.getElementById('tv-reveal-area');
                 if(data.showNorm || data.showOdd) {
                     revBox.style.display = 'flex';
@@ -427,6 +429,7 @@
 
                 // كشف المختلف (شاشة كبيرة منفصلة)
                 const oddOverlay = document.getElementById('tv-odd-reveal-overlay');
+                // تظهر فقط إذا كانت الحالة odd_reveal
                 if(data.state === 'odd_reveal' && oddName) {
                     oddOverlay.style.display = 'flex';
                     document.getElementById('tv-odd-name-big').innerText = oddName;
@@ -439,10 +442,6 @@
         function togglePopupQR() {
             const p = document.getElementById('popup-qr');
             p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
-        }
-        
-        function closeRevealOverlay() {
-            document.getElementById('tv-odd-reveal-overlay').style.display = 'none';
         }
 
         function endGamePermanently() {
@@ -638,6 +637,10 @@
                 updates[`oddgame/${roomId}/state`] = 'odd_reveal'; 
                 db.ref().update(updates);
             });
+        }
+
+        function hideOddReveal() {
+            db.ref(`oddgame/${roomId}/state`).set('results'); // حالة "النتائج" بدون عرض الشاشة الكبيرة
         }
 
     </script>

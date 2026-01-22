@@ -100,7 +100,7 @@
         }
         .q-odd { border-color: var(--red); color: var(--red); }
 
-        /* --- تعديل الشبكة --- */
+        /* الشبكة */
         .answers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -120,22 +120,18 @@
             padding: 3px; font-size: 0.9rem; font-weight: bold;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        /* تعديل الخط ليكون كبير وواضح */
         .p-card-ans {
             padding: 5px; color: #333; 
-            font-size: 1.8rem; /* تكبير الخط */
-            font-weight: 900; /* تعريض الخط */
+            font-size: 1.8rem; font-weight: 900;
             min-height: 50px; 
             display: flex; align-items: center; justify-content: center; background: #eee;
-            line-height: 1;
-            word-break: break-word;
+            line-height: 1; word-break: break-word;
         }
         .p-card-score {
             background: #333; color: white; font-size: 0.8rem; padding: 2px;
         }
         .ans-hidden { color: #ccc; font-size: 1.5rem; letter-spacing: 2px; }
 
-        /* الأزرار العلوية */
         .tv-top-bar { position: absolute; top: 15px; width: 95%; display: flex; justify-content: space-between; z-index: 100; }
         .btn-top { padding: 5px 15px; border-radius: 15px; border: 2px solid white; font-weight: bold; cursor: pointer; color: white; font-size: 0.9rem; }
         .btn-end { background: var(--red); }
@@ -161,14 +157,8 @@
         .admin-box { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ddd; }
         .btn-ctrl { width: 100%; padding: 12px; border:none; border-radius: 8px; margin: 3px 0; color: white; font-weight: bold; cursor: pointer; }
         
-        /* قائمة الأصوات الحية للمقدم */
-        #adm-vote-list {
-            list-style: none; padding: 0; margin: 10px 0; text-align: right;
-        }
-        #adm-vote-list li {
-            border-bottom: 1px solid #eee; padding: 5px; font-size: 0.9rem;
-            display: flex; justify-content: space-between;
-        }
+        #adm-vote-list { list-style: none; padding: 0; margin: 10px 0; text-align: right; }
+        #adm-vote-list li { border-bottom: 1px solid #eee; padding: 5px; font-size: 0.9rem; display: flex; justify-content: space-between; }
         #adm-vote-list span { font-weight: bold; color: var(--bg-purple); }
 
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
@@ -315,14 +305,20 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
+        // بنك الأسئلة الجديد
         const questionsPool = [
-            { norm: "شيء تلبسه في رجلك؟", odd: "شيء تلبسه في يدك؟" },
-            { norm: "فاكهة لونها أصفر؟", odd: "فاكهة لونها أحمر؟" },
-            { norm: "حيوان يقول مياو؟", odd: "حيوان يقول هو هو؟" },
-            { norm: "دولة فيها برج خليفة؟", odd: "دولة فيها الأهرامات؟" },
-            { norm: "شيء تشربه في الصباح؟", odd: "شيء تأكله في الغداء؟" },
-            { norm: "نادي سعودي شعاره أصفر؟", odd: "نادي سعودي شعاره أزرق؟" },
-            { norm: "شيء موجود في السماء؟", odd: "شيء موجود في البحر؟" }
+            { norm: "ايش اكثر شي يقروش في كل خميس", odd: "ايش اكثر شيء يقروش هدى" },
+            { norm: "اكثر اكله ناكلها في العشاء يوم الخميس", odd: "اكثر اكله تحب تاكلها في العشاء يوم الخميس" },
+            { norm: "اكثر لاعب في الاتحاد تحبه", odd: "اكثر لاعب في الاتحاد تكرهه" },
+            { norm: "اكثر لاعب تتمنى يجي الاتحاد", odd: "اكثر لاعب سجل على الاتحاد" },
+            { norm: "وش هو الشيء اللي مستحيل تأكله في الفطور؟", odd: "وش هو الشيء اللي مستحيل تأكله في الغداء؟" },
+            { norm: "مكان تحب تروحه عشان تروق وتهدّي أعصابك؟", odd: "مكان تحب تروحه عشان تنبسط وتفلها مع اصدقائك؟" },
+            { norm: "برنامج في جوالك تقضي عليه أغلب وقتك؟", odd: "برنامج في جوالك ودك تحذفه بس مضطر تخليه؟" },
+            { norm: "وش الشيء اللي تسويه أول ما تصحى من النوم؟", odd: "وش الشيء اللي تسويه قبل ما تنام مباشرة؟" },
+            { norm: "رياضة تحب تتابعها وتتحمس معها؟", odd: "رياضة تشوفها مملة وتجيب النوم؟" },
+            { norm: "حيوان مفترس تخاف يقرب منك؟", odd: "حيوان أليف ودك تربيه في بيتك؟" },
+            { norm: "شيء مستحيل تطلع من البيت بدونه؟", odd: "شيء دايم يضيع منك وتدور عليه في البيت؟" },
+            { norm: "وجبة سريعة تحب تطلبها آخر الليل؟", odd: "وجبة تحب تاكلها وأنت تتابع فيلم أو مباراة؟" }
         ];
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -415,6 +411,7 @@
                     });
                 }
 
+                // كشف الأسئلة
                 const revBox = document.getElementById('tv-reveal-area');
                 if(data.showNorm || data.showOdd) {
                     revBox.style.display = 'flex';
@@ -428,7 +425,7 @@
                     revBox.style.display = 'none';
                 }
 
-                // كشف المختلف (شاشة كبيرة)
+                // كشف المختلف (شاشة كبيرة منفصلة)
                 const oddOverlay = document.getElementById('tv-odd-reveal-overlay');
                 if(data.state === 'odd_reveal' && oddName) {
                     oddOverlay.style.display = 'flex';
@@ -551,15 +548,11 @@
                 }
                 let oddPlayer = "غير محدد";
                 
-                // حساب الأصوات المباشرة
                 const voteCounts = {};
                 if (data.players) {
                     Object.values(data.players).forEach(p => {
                         if(p.role === 'odd') oddPlayer = p.name;
-                        // تجميع الأصوات
                         if(p.votedFor) {
-                            // نحتاج اسم الشخص المصوت له
-                            // هنا p.votedFor هو ID، نحتاج نربطه بالاسم
                             const targetName = data.players[p.votedFor]?.name || "؟";
                             voteCounts[targetName] = (voteCounts[targetName] || 0) + 1;
                         }
@@ -567,7 +560,7 @@
                 }
                 document.getElementById('adm-odd-name').innerText = oddPlayer;
 
-                // عرض قائمة الأصوات للمقدم
+                // عرض الأصوات للمقدم
                 if(data.state === 'voting') {
                     document.getElementById('adm-voting-stats').style.display = 'block';
                     const list = document.getElementById('adm-vote-list');
@@ -642,7 +635,7 @@
                     updates[`oddgame/${roomId}/players/${oddId}/score`] = (data.players[oddId].score || 0) + 2; 
                 }
 
-                updates[`oddgame/${roomId}/state`] = 'odd_reveal'; // حالة جديدة للعرض
+                updates[`oddgame/${roomId}/state`] = 'odd_reveal'; 
                 db.ref().update(updates);
             });
         }

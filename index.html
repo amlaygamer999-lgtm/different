@@ -75,7 +75,21 @@
             justify-content: flex-start; padding-top: 50px;
         }
 
-        /* منطقة كشف الأسئلة (فوق الإجابات) */
+        /* منطقة كشف المختلف (Overlay) */
+        #tv-odd-reveal-overlay {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.95); z-index: 500;
+            flex-direction: column; justify-content: center; align-items: center;
+            animation: fadeIn 0.5s;
+        }
+        .reveal-title { font-size: 3rem; color: white; margin-bottom: 20px; }
+        .reveal-name { 
+            font-size: 5rem; color: var(--red); font-weight: 900; 
+            border: 5px solid var(--red); padding: 20px 50px; border-radius: 20px;
+            background: #fff; animation: bounceIn 1s;
+        }
+
+        /* منطقة كشف الأسئلة */
         .reveal-box {
             width: 95%; display: none; justify-content: center; gap: 10px; margin-bottom: 10px;
         }
@@ -86,42 +100,40 @@
         }
         .q-odd { border-color: var(--red); color: var(--red); }
 
-        /* --- تعديل الشبكة لتكون صغيرة جداً (6 في الصف) --- */
+        /* --- تعديل الشبكة --- */
         .answers-grid {
             display: grid;
-            /* هذا السطر يضمن وجود 6 عناصر على الأقل في الصف، وكلما كبرت الشاشة زاد العدد */
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 8px; /* مسافة صغيرة بين المربعات */
-            width: 95%; 
-            overflow-y: auto; 
-            padding-bottom: 20px;
-            align-content: start;
+            gap: 10px; width: 95%; overflow-y: auto; padding-bottom: 20px; align-content: start;
         }
 
         .player-card {
             background: #fff; border-radius: 8px; overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: center;
             display: flex; flex-direction: column;
-            /* لا يوجد ارتفاع ثابت ليأخذ حجم المحتوى فقط */
         }
         .player-card.done { border: 3px solid var(--green); }
         .player-card.suspect { border: 3px solid var(--red); animation: shake 0.5s; }
 
         .p-card-name {
             background: var(--bg-purple); color: var(--primary);
-            padding: 3px; font-size: 0.9rem; font-weight: bold; /* اسم صغير */
+            padding: 3px; font-size: 0.9rem; font-weight: bold;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
+        /* تعديل الخط ليكون كبير وواضح */
         .p-card-ans {
-            padding: 5px; color: #333; font-size: 1rem; font-weight: bold; /* خط الإجابة متوسط */
-            min-height: 30px; /* ارتفاع صغير للإجابة */
+            padding: 5px; color: #333; 
+            font-size: 1.8rem; /* تكبير الخط */
+            font-weight: 900; /* تعريض الخط */
+            min-height: 50px; 
             display: flex; align-items: center; justify-content: center; background: #eee;
-            line-height: 1.1;
+            line-height: 1;
+            word-break: break-word;
         }
         .p-card-score {
-            background: #333; color: white; font-size: 0.7rem; padding: 2px;
+            background: #333; color: white; font-size: 0.8rem; padding: 2px;
         }
-        .ans-hidden { color: #ccc; font-size: 1.2rem; letter-spacing: 2px; }
+        .ans-hidden { color: #ccc; font-size: 1.5rem; letter-spacing: 2px; }
 
         /* الأزرار العلوية */
         .tv-top-bar { position: absolute; top: 15px; width: 95%; display: flex; justify-content: space-between; z-index: 100; }
@@ -129,10 +141,7 @@
         .btn-end { background: var(--red); }
         .btn-qr { background: var(--secondary); color: #000; }
 
-        /* نافذة الباركود */
         #popup-qr { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 200; flex-direction: column; justify-content: center; align-items: center; }
-
-        /* شاشة الطرد */
         #scr-locked { background: #b71c1c; color: white; z-index: 9999; text-align: center; }
 
         /* --- شاشات الجوال --- */
@@ -151,7 +160,20 @@
         /* أدمن */
         .admin-box { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ddd; }
         .btn-ctrl { width: 100%; padding: 12px; border:none; border-radius: 8px; margin: 3px 0; color: white; font-weight: bold; cursor: pointer; }
+        
+        /* قائمة الأصوات الحية للمقدم */
+        #adm-vote-list {
+            list-style: none; padding: 0; margin: 10px 0; text-align: right;
+        }
+        #adm-vote-list li {
+            border-bottom: 1px solid #eee; padding: 5px; font-size: 0.9rem;
+            display: flex; justify-content: space-between;
+        }
+        #adm-vote-list span { font-weight: bold; color: var(--bg-purple); }
+
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); opacity: 1; } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -196,6 +218,12 @@
             <div style="background:white; padding:20px; border-radius:20px;">
                 <div id="qr-popup-img"></div>
             </div>
+        </div>
+
+        <div id="tv-odd-reveal-overlay" onclick="closeRevealOverlay()">
+            <div class="reveal-title">المختلف هو...</div>
+            <div id="tv-odd-name-big" class="reveal-name"></div>
+            <p style="color:white; margin-top:20px;">اضغط للإغلاق</p>
         </div>
 
         <h2 style="color:white; margin:0 0 5px 0;">مين المختلف؟ 🤔</h2>
@@ -257,7 +285,13 @@
                 
                 <hr>
                 <button class="btn-ctrl" style="background:var(--primary); color:black;" onclick="startVoting()">🗳️ بدء التصويت</button>
-                <button class="btn-ctrl" style="background:#333;" onclick="calculateScores()">🏆 احتساب النقاط</button>
+                
+                <div id="adm-voting-stats" style="display:none; background:#f9f9f9; padding:5px; border-radius:5px; margin:5px 0;">
+                    <small>الأصوات الحالية:</small>
+                    <ul id="adm-vote-list"></ul>
+                </div>
+
+                <button class="btn-ctrl" style="background:#d32f2f;" onclick="revealOddPlayer()">🤡 كشف المختلف (تلقائي)</button>
 
                 <hr>
                 <div style="display:flex; gap:5px;">
@@ -281,7 +315,6 @@
         try { if(firebase.apps.length === 0) firebase.initializeApp(firebaseConfig); else firebase.app(); } catch(e) {}
         const db = firebase.database();
 
-        // بنك الأسئلة
         const questionsPool = [
             { norm: "شيء تلبسه في رجلك؟", odd: "شيء تلبسه في يدك؟" },
             { norm: "فاكهة لونها أصفر؟", odd: "فاكهة لونها أحمر؟" },
@@ -298,7 +331,6 @@
         let myId = localStorage.getItem('odd_myId') || Date.now().toString();
         localStorage.setItem('odd_myId', myId);
 
-        // --- التوجيه الأولي ---
         window.onload = function() {
             if (!roomId && !role) {
                 // Landing
@@ -357,19 +389,21 @@
                 else if(data.state === 'round') st.innerText = "كتابة الإجابات...";
                 else if(data.state === 'reveal') st.innerText = "الإجابات:";
                 else if(data.state === 'voting') st.innerText = "التصويت جارٍ... 🕵️‍♂️";
-                else if(data.state === 'results') st.innerText = "النتائج 🏆";
+                else if(data.state === 'odd_reveal') st.innerText = "النتائج 🏆";
+
+                let oddName = "";
 
                 if(data.players) {
                     Object.values(data.players).forEach(p => {
                         const div = document.createElement('div');
                         div.className = 'player-card';
                         if(p.answer) div.classList.add('done');
+                        if(p.role === 'odd') oddName = p.name;
 
                         let ansContent = '<span class="ans-hidden">؟؟؟</span>';
                         if(data.showAns && p.answer) ansContent = p.answer;
                         else if(!p.answer) ansContent = '...';
 
-                        // عرض النقاط
                         const score = p.score || 0;
 
                         div.innerHTML = `
@@ -381,7 +415,6 @@
                     });
                 }
 
-                // كشف الأسئلة (فوق)
                 const revBox = document.getElementById('tv-reveal-area');
                 if(data.showNorm || data.showOdd) {
                     revBox.style.display = 'flex';
@@ -394,12 +427,25 @@
                 } else {
                     revBox.style.display = 'none';
                 }
+
+                // كشف المختلف (شاشة كبيرة)
+                const oddOverlay = document.getElementById('tv-odd-reveal-overlay');
+                if(data.state === 'odd_reveal' && oddName) {
+                    oddOverlay.style.display = 'flex';
+                    document.getElementById('tv-odd-name-big').innerText = oddName;
+                } else {
+                    oddOverlay.style.display = 'none';
+                }
             });
         }
 
         function togglePopupQR() {
             const p = document.getElementById('popup-qr');
             p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
+        }
+        
+        function closeRevealOverlay() {
+            document.getElementById('tv-odd-reveal-overlay').style.display = 'none';
         }
 
         function endGamePermanently() {
@@ -438,14 +484,12 @@
 
                 const myData = data.players && data.players[myId];
                 
-                // إخفاء كل الشاشات الفرعية أولاً
                 document.getElementById('p-waiting').style.display = 'none';
                 document.getElementById('p-game').style.display = 'none';
                 document.getElementById('p-vote').style.display = 'none';
                 document.getElementById('p-done').style.display = 'none';
 
                 if(data.state === 'round' && myData && myData.role !== 'pending' && !myData.answer) {
-                    // وقت الإجابة
                     document.getElementById('p-game').style.display = 'block';
                     if(myData.role === 'odd') {
                         document.getElementById('p-q-text').innerText = data.q.odd;
@@ -455,11 +499,9 @@
                         document.getElementById('p-q-text').style.color = "black";
                     }
                 } else if (data.state === 'voting') {
-                    // وقت التصويت
                     document.getElementById('p-vote').style.display = 'block';
                     renderVotingList(data.players);
                 } else {
-                    // انتظار
                     document.getElementById('p-waiting').style.display = 'block';
                 }
             });
@@ -469,15 +511,13 @@
             const list = document.getElementById('p-vote-list');
             list.innerHTML = '';
             Object.keys(players).forEach(pid => {
-                if(pid !== myId) { // لا تصوت لنفسك
+                if(pid !== myId) { 
                     const btn = document.createElement('button');
                     btn.className = 'vote-btn';
                     btn.innerText = players[pid].name;
                     btn.onclick = () => {
-                        // تظليل الاختيار
                         document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
                         btn.classList.add('selected');
-                        // إرسال التصويت
                         db.ref(`oddgame/${roomId}/players/${myId}/votedFor`).set(pid);
                     };
                     list.appendChild(btn);
@@ -510,12 +550,34 @@
                     document.getElementById('adm-odd-q').innerText = data.q.odd;
                 }
                 let oddPlayer = "غير محدد";
-                if(data.players) {
+                
+                // حساب الأصوات المباشرة
+                const voteCounts = {};
+                if (data.players) {
                     Object.values(data.players).forEach(p => {
                         if(p.role === 'odd') oddPlayer = p.name;
+                        // تجميع الأصوات
+                        if(p.votedFor) {
+                            // نحتاج اسم الشخص المصوت له
+                            // هنا p.votedFor هو ID، نحتاج نربطه بالاسم
+                            const targetName = data.players[p.votedFor]?.name || "؟";
+                            voteCounts[targetName] = (voteCounts[targetName] || 0) + 1;
+                        }
                     });
                 }
                 document.getElementById('adm-odd-name').innerText = oddPlayer;
+
+                // عرض قائمة الأصوات للمقدم
+                if(data.state === 'voting') {
+                    document.getElementById('adm-voting-stats').style.display = 'block';
+                    const list = document.getElementById('adm-vote-list');
+                    list.innerHTML = '';
+                    for (const [name, count] of Object.entries(voteCounts)) {
+                        list.innerHTML += `<li>${name} <span>${count} صوت</span></li>`;
+                    }
+                } else {
+                    document.getElementById('adm-voting-stats').style.display = 'none';
+                }
             });
         }
 
@@ -523,7 +585,6 @@
             db.ref(`oddgame/${roomId}`).once('value', snap => {
                 const data = snap.val();
                 if(!data || !data.players) return alert("لا يوجد لاعبين");
-                
                 const ids = Object.keys(data.players);
                 if(ids.length < 3) alert("يفضل وجود 3 لاعبين أو أكثر");
 
@@ -554,7 +615,7 @@
         }
         function startVoting() { db.ref(`oddgame/${roomId}/state`).set('voting'); }
 
-        function calculateScores() {
+        function revealOddPlayer() {
             db.ref(`oddgame/${roomId}`).once('value', snap => {
                 const data = snap.val();
                 if(!data || !data.players) return;
@@ -567,25 +628,21 @@
                 let updates = {};
                 let oddVotes = 0;
 
-                // حساب النقاط
                 Object.keys(data.players).forEach(pid => {
                     const p = data.players[pid];
                     let currentScore = p.score || 0;
-
-                    // إذا كان عادي وصوت ضد المختلف صح
                     if(p.role === 'norm' && p.votedFor === oddId) {
                         currentScore += 1;
-                        oddVotes++; // كشفناه
+                        oddVotes++;
                     }
                     updates[`oddgame/${roomId}/players/${pid}/score`] = currentScore;
                 });
 
-                // إذا المختلف محد صوت ضده (عدد الأصوات ضده 0)
                 if(oddVotes === 0 && oddId) {
                     updates[`oddgame/${roomId}/players/${oddId}/score`] = (data.players[oddId].score || 0) + 2; 
                 }
 
-                updates[`oddgame/${roomId}/state`] = 'results';
+                updates[`oddgame/${roomId}/state`] = 'odd_reveal'; // حالة جديدة للعرض
                 db.ref().update(updates);
             });
         }
